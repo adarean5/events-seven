@@ -8,7 +8,8 @@
     "test": "ng test",
     "lint": "ng lint",
     "format": "prettier --write src/**/*.{js,ts,jsx,tsx,html,scss}",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "pre-commit": "npm run lint && lint-staged"
   },
   "private": true,
   "dependencies": {
@@ -48,10 +49,10 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged"
+      "pre-commit": "npm run pre-commit"
     }
   },
   "lint-staged": {
-    "*.{js,ts,jsx,tsx,html,scss}": ["npm run format", "npm run lint"]
+    "*.{js,ts,html,scss}": "prettier --write"
   }
 }
