@@ -6,7 +6,7 @@ import { Observable } from "rxjs";
 import { User } from "@auth/models/user.model";
 
 @Injectable({
-    providedIn: "root",
+    providedIn: "any",
 })
 export class GoogleAuthService {
     constructor(
