@@ -4,6 +4,7 @@ import { RouterModule } from "@angular/router";
 import { MatInputModule } from "@angular/material/input";
 import { MatButtonModule } from "@angular/material/button";
 import { MatRippleModule } from "@angular/material/core";
+import { HttpClientModule } from "@angular/common/http";
 
 import { SignInComponent } from "@auth/pages/sign-in/sign-in.component";
 import { routes } from "@auth/auth.routes";
@@ -16,6 +17,7 @@ import { routes } from "@auth/auth.routes";
         MatInputModule,
         MatButtonModule,
         MatRippleModule,
+        HttpClientModule,
     ],
 })
 export class AuthModule {}
