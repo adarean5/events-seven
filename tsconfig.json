@@ -19,7 +19,12 @@
     "lib": [
       "es2018",
       "dom"
-    ]
+    ],
+    "paths": {
+      "@/*": ["src/*"],
+      "@auth/*": ["src/app/auth/*"],
+      "@event-manager/*": ["src/app/event-manager/*"]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
