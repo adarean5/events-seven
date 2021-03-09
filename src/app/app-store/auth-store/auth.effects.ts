@@ -20,9 +20,7 @@ export class AuthEffects implements OnInitEffects {
     getUser = createEffect(() => {
         return this.actions$.pipe(
             ofType(AuthActions.getUser),
-            exhaustMap(() => {
-                return this.googleAuthService.getUserData();
-            }),
+            exhaustMap(() => this.googleAuthService.getUserData()),
             map((userData: any | null) => {
                 if (!userData) {
                     return AuthActions.notAuthenticated();
@@ -61,15 +59,9 @@ export class AuthEffects implements OnInitEffects {
     signIn = createEffect(() =>
         this.actions$.pipe(
             ofType(AuthActions.signIn),
-            exhaustMap(() => {
-                return fromPromise(this.googleAuthService.signIn());
-            }),
-            map(() => {
-                return AuthActions.getUser();
-            }),
-            catchError((error) => {
-                return of(AuthActions.signInError(error));
-            }),
+            exhaustMap(() => fromPromise(this.googleAuthService.signIn())),
+            map(() => AuthActions.getUser()),
+            catchError((error) => of(AuthActions.signInError(error))),
         ),
     );
 

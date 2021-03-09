@@ -20,12 +20,6 @@ export class GoogleAuthService {
         return this.fireAuth.signInWithRedirect(provider);
     }
 
-    // public async signIn(): Promise<UserCredential> {
-    //     debugger;
-    //     const provider = new firebase.auth.GoogleAuthProvider();
-    //     return this.fireAuth.signInWithPopup(provider);
-    // }
-
     async signOut(): Promise<void> {
         await this.fireAuth.signOut();
     }
