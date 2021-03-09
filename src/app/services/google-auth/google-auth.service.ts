@@ -1,5 +1,4 @@
 import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
 import { AngularFireAuth } from "@angular/fire/auth";
 import { Observable } from "rxjs";
 import { User } from "@/app/models/user.model";
@@ -9,7 +8,7 @@ import firebase from "firebase/app";
     providedIn: "root",
 })
 export class GoogleAuthService {
-    constructor(private http: HttpClient, private fireAuth: AngularFireAuth) {}
+    constructor(private fireAuth: AngularFireAuth) {}
 
     public getUserData(): Observable<User | null> {
         return this.fireAuth.authState;
