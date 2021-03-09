@@ -1,11 +1,10 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { RouterModule } from "@angular/router";
-import { routes } from "@event-manager/event-manager.routes";
 import { EventOverviewComponent } from "./pages/event-overview/event-overview.component";
+import { EventDefinitionsRoutingModule } from "@/app/event-definitions/event-definitions-routing.module";
 
 @NgModule({
     declarations: [EventOverviewComponent],
-    imports: [CommonModule, RouterModule.forChild(routes())],
+    imports: [CommonModule, EventDefinitionsRoutingModule],
 })
-export class EventManagerModule {}
+export class EventDefinitionsModule {}

@@ -1,22 +1,25 @@
 import { NgModule } from "@angular/core";
-import { RouterModule, Routes } from "@angular/router";
+import { RouterModule } from "@angular/router";
+
+import { Routes } from "@angular/router";
 
 const routes: Routes = [
     {
-        path: "login",
+        path: "auth",
         loadChildren: () =>
-            import("./auth/auth.module").then((m) => m.AuthModule),
+            import("@auth/auth.module").then((m) => m.AuthModule),
+        // TODO Add route guard
     },
     {
-        path: "event-manager",
+        path: "",
         loadChildren: () =>
-            import("./event-manager/event-manager.module").then(
-                (m) => m.EventManagerModule,
-            ),
+            import("@/app/shell/shell.module").then((m) => m.ShellModule),
+        // TODO Add route guard
     },
     {
         path: "**",
-        redirectTo: "/login",
+        redirectTo: "/not-found",
+        // TODO Define the generic 404 component
     },
 ];
 
