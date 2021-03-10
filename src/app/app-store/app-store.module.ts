@@ -25,7 +25,7 @@ import { UserStoreModule } from "@/app/app-store/user-store/user-store.module";
             maxAge: 25,
             logOnly: environment.production,
         }),
-        EffectsModule.forRoot(),
+        EffectsModule.forRoot([]),
         UserStoreModule,
         AuthStoreModule,
     ],

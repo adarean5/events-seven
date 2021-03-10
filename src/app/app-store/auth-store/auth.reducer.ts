@@ -8,30 +8,17 @@ import { Action, createReducer, on } from "@ngrx/store";
 export const authReducer = createReducer(
     getInitialAuthState(),
 
-    on(AuthActions.getUser, (state) => ({
-        ...state,
-        user: null,
-        isLoading: true,
-    })),
-    on(AuthActions.authenticated, (state, { user }) => ({
-        ...state,
-        user,
-        isLoading: false,
-    })),
-    on(AuthActions.notAuthenticated, (state) => ({
-        ...state,
-        isLoading: false,
-    })),
-
     on(AuthActions.signIn, (state: AuthState) => ({
         ...state,
         isLoading: true,
     })),
+
     on(AuthActions.signInSuccess, (state: AuthState, { user }) => ({
         ...state,
         user,
         isLoading: false,
     })),
+
     on(AuthActions.signInError, (state: AuthState) => ({
         ...state,
         isLoading: false,
