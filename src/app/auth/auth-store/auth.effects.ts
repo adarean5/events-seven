@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
-import * as AuthActions from "@/app/app-store/auth-store/auth.actions";
+import * as AuthActions from "@auth/auth-store/auth.actions";
 import { catchError, exhaustMap } from "rxjs/operators";
-import { GoogleAuthService } from "@/app/services/google-auth/google-auth.service";
+import { GoogleAuthService } from "@auth/services/google-auth/google-auth.service";
 import { fromPromise } from "rxjs/internal-compatibility";
 import { of } from "rxjs";
 

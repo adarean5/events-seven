@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
-import { AuthState } from "@/app/app-store/auth-store/auth.state";
+import { AuthState } from "@/app/auth/auth-store/auth.state";
 import { Store } from "@ngrx/store";
-import { signIn } from "@/app/app-store/auth-store/auth.actions";
+import { signIn } from "@/app/auth/auth-store/auth.actions";
 import { getUser, signOut } from "@/app/app-store/user-store/user.actions";
 
 @Component({

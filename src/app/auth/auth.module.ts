@@ -7,6 +7,8 @@ import { HttpClientModule } from "@angular/common/http";
 
 import { SignInComponent } from "@auth/pages/sign-in/sign-in.component";
 import { AuthRoutingModule } from "./auth-routing.module";
+import { AuthStoreModule } from "@auth/auth-store/auth-store.module";
+import { AuthServicesModule } from "@auth/services/auth-services.module";
 
 @NgModule({
     declarations: [SignInComponent],
@@ -17,6 +19,8 @@ import { AuthRoutingModule } from "./auth-routing.module";
         MatRippleModule,
         HttpClientModule,
         AuthRoutingModule,
+        AuthStoreModule,
+        AuthServicesModule,
     ],
     exports: [],
 })
