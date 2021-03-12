@@ -17,11 +17,11 @@ export class UserEffects implements OnInitEffects {
         private userService: UserService,
     ) {}
 
-    cartEffectsInit = createAction(buildType("Effects init"));
+    userEffectsInit = createAction(buildType("Effects init"));
 
     init = createEffect(() =>
         this.actions$.pipe(
-            ofType(this.cartEffectsInit),
+            ofType(this.userEffectsInit),
             map(() => UserActions.getUser()),
         ),
     );
@@ -79,6 +79,6 @@ export class UserEffects implements OnInitEffects {
     );
 
     ngrxOnInitEffects(): Action {
-        return this.cartEffectsInit();
+        return this.userEffectsInit();
     }
 }

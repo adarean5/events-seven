@@ -1,7 +1,7 @@
 import { User } from "@/app/models/user.model";
 
 export interface UserState {
-    user?: User | null;
+    user: User | null | undefined;
     error: string | null;
     isLoading: boolean;
 }

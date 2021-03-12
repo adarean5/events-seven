@@ -7,7 +7,7 @@ export const userReducer = createReducer(
 
     on(UserActions.getUser, (state) => ({
         ...state,
-        user: null,
+        user: undefined,
         isLoading: true,
     })),
 
@@ -19,6 +19,7 @@ export const userReducer = createReducer(
 
     on(UserActions.notAuthenticated, (state) => ({
         ...state,
+        user: null,
         isLoading: false,
     })),
 
