@@ -1,45 +1,39 @@
 import { Injectable } from "@angular/core";
-import { CanActivate, CanLoad } from "@angular/router";
+import { CanActivate, CanLoad, Router, UrlTree } from "@angular/router";
 import { Observable } from "rxjs";
 import { select, Store } from "@ngrx/store";
 import { UserState } from "@/app/app-store/user-store/user.state";
 import { selectUser } from "@/app/app-store/user-store/user.selectors";
-import { filter, map, take, tap } from "rxjs/operators";
-import { getUser } from "@/app/app-store/user-store/user.actions";
+import { map, skipWhile, take } from "rxjs/operators";
 import { User } from "@/app/models/user.model";
 
 @Injectable({
     providedIn: "root",
 })
 export class IsAuthenticatedGuard implements CanActivate, CanLoad {
-    constructor(private store: Store<UserState>) {}
+    constructor(private store: Store<UserState>, private router: Router) {}
 
-    canActivate(): Observable<boolean> {
+    canActivate(): Observable<true | UrlTree> {
         return this.getUserFromStore().pipe(
-            map(() => {
-                return true;
-            }),
+            map((user) => this.isAuthenticated(user)),
         );
     }
-    canLoad(): Observable<boolean> {
+
+    canLoad(): Observable<true | UrlTree> {
         return this.getUserFromStore().pipe(
-            map(() => {
-                return true;
-            }),
+            map((user) => this.isAuthenticated(user)),
         );
+    }
+
+    isAuthenticated(user: User | null | undefined): true | UrlTree {
+        return user != null || this.router.parseUrl("/auth/sign-in");
     }
 
     getUserFromStore(): Observable<User | null | undefined> {
         return this.store.pipe(
             select(selectUser),
-            tap((user: User | null | undefined) => {
-                if (user == null) {
-                    this.store.dispatch(getUser());
-                }
-            }),
-            filter((user: User | null | undefined) => {
-                return user != null;
-            }),
+            // Make sure the user is defined before proceeding
+            skipWhile((user) => typeof user === "undefined"),
             take(1),
         );
     }

@@ -9,14 +9,14 @@ const routes: Routes = [
     {
         path: "auth",
         canActivate: [IsNotAuthenticatedGuard],
-        // canLoad: [IsNotAuthenticatedGuard],
+        canLoad: [IsNotAuthenticatedGuard],
         loadChildren: () =>
             import("@auth/auth.module").then((m) => m.AuthModule),
     },
     {
         path: "",
         canActivate: [IsAuthenticatedGuard],
-        // canLoad: [IsAuthenticatedGuard],
+        canLoad: [IsAuthenticatedGuard],
         loadChildren: () =>
             import("@/app/shell/shell.module").then((m) => m.ShellModule),
     },
@@ -30,6 +30,5 @@ const routes: Routes = [
 @NgModule({
     imports: [RouterModule.forRoot(routes)],
     exports: [RouterModule],
-    providers: [IsAuthenticatedGuard, IsNotAuthenticatedGuard],
 })
 export class AppRoutingModule {}

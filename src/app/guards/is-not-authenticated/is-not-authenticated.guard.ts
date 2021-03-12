@@ -1,47 +1,32 @@
 import { Injectable } from "@angular/core";
-import { CanActivate, CanLoad } from "@angular/router";
+import { CanActivate, CanLoad, Router, UrlTree } from "@angular/router";
 import { Observable } from "rxjs";
-import { filter, map, take, tap } from "rxjs/operators";
+import { map } from "rxjs/operators";
 import { User } from "@/app/models/user.model";
-import { select, Store } from "@ngrx/store";
-import { selectUser } from "@/app/app-store/user-store/user.selectors";
-import { getUser } from "@/app/app-store/user-store/user.actions";
-import { UserState } from "@/app/app-store/user-store/user.state";
+import { IsAuthenticatedGuard } from "@/app/guards/is-authenticated/is-authenticated.guard";
 
 @Injectable({
     providedIn: "root",
 })
 export class IsNotAuthenticatedGuard implements CanActivate, CanLoad {
-    constructor(private store: Store<UserState>) {}
+    constructor(
+        private isAuthenticatedGuard: IsAuthenticatedGuard,
+        private router: Router,
+    ) {}
 
-    canActivate(): Observable<boolean> {
-        return this.getUserFromStore().pipe(
-            map(() => {
-                return true;
-            }),
-        );
+    canActivate(): Observable<boolean | UrlTree> {
+        return this.isAuthenticatedGuard
+            .getUserFromStore()
+            .pipe(map((user) => this.isNotAuthenticated(user)));
     }
 
-    canLoad(): Observable<boolean> {
-        return this.getUserFromStore().pipe(
-            map(() => {
-                return true;
-            }),
-        );
+    canLoad(): Observable<boolean | UrlTree> {
+        return this.isAuthenticatedGuard
+            .getUserFromStore()
+            .pipe(map((user) => this.isNotAuthenticated(user)));
     }
 
-    getUserFromStore(): Observable<User | null | undefined> {
-        return this.store.pipe(
-            select(selectUser),
-            tap((user: User | null | undefined) => {
-                if (user == null) {
-                    this.store.dispatch(getUser());
-                }
-            }),
-            filter((user: User | null | undefined) => {
-                return user == null;
-            }),
-            take(1),
-        );
+    isNotAuthenticated(user: User | null | undefined): boolean | UrlTree {
+        return user === null || this.router.parseUrl("");
     }
 }
