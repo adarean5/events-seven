@@ -53,6 +53,46 @@ export class EventOverviewComponent implements OnInit {
                 relatedEvents: [],
                 createdById: "1",
             },
+            {
+                id: "test-id-2",
+                name: "redirect-event",
+                description:
+                    "the user will be redirected when accessing an invalid url",
+                type: EventTypes.CrossPromo,
+                priority: 4,
+                relatedEvents: [],
+                createdById: "1",
+            },
+            {
+                id: "test-id-3",
+                name: "redirect-event",
+                description:
+                    "the user will be redirected when accessing an invalid url",
+                type: EventTypes.CrossPromo,
+                priority: 1,
+                relatedEvents: [],
+                createdById: "1",
+            },
+            {
+                id: "test-id-4",
+                name: "redirect-event",
+                description:
+                    "the user will be redirected when accessing an invalid url",
+                type: EventTypes.Ads,
+                priority: 4,
+                relatedEvents: [],
+                createdById: "3",
+            },
+            {
+                id: "test-id-5",
+                name: "redirect-event",
+                description:
+                    "the user will be redirected when accessing an invalid url",
+                type: EventTypes.LiveOps,
+                priority: 6,
+                relatedEvents: [],
+                createdById: "2",
+            },
         ]);
     }
 }

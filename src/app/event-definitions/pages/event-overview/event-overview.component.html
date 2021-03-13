@@ -1,5 +1,26 @@
-<app-table
-    *ngIf="events | async as eventsValue"
-    [rowData]="eventsValue"
-    [columnDefs]="columnDefs"
-></app-table>
+<div class="ets-evt-overview__wrapper">
+    <mat-card id="event-definitions-list" class="esm-card">
+        <mat-card-header>
+            <mat-card-title>
+                <span>Event definitions</span>
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <app-table
+                *ngIf="events | async as eventsValue"
+                [rowData]="eventsValue"
+                [columnDefs]="columnDefs"
+            ></app-table>
+        </mat-card-content>
+    </mat-card>
+    <mat-card id="event-definitions-form" class="esm-card">
+        <mat-card-header>
+            <mat-card-title>
+                <span>Edit event</span>
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <p>TODO: Add event form</p>
+        </mat-card-content>
+    </mat-card>
+</div>

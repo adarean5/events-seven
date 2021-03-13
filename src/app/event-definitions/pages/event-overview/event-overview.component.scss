@@ -1,3 +1,20 @@
-table {
+@use "src/styles/variables";
+
+.esm-card {
+    margin: variables.get-spacing(smaller);
+}
+
+.ets-evt-overview__wrapper {
+    padding: variables.get-spacing(medium);
     width: 100%;
+    display: flex;
+    align-items: stretch;
+}
+
+#event-definitions-list {
+    flex: 2;
+}
+
+#event-definitions-form {
+    flex: 1;
 }
