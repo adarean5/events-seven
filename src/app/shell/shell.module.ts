@@ -4,6 +4,8 @@ import { ShellRoutingModule } from "@/app/shell/shell-routing.module";
 import { ShellComponent } from "./pages/shell/shell.component";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatButtonModule } from "@angular/material/button";
+import { MatMenuModule } from "@angular/material/menu";
+import { MatIconModule } from "@angular/material/icon";
 
 @NgModule({
     declarations: [ShellComponent],
@@ -12,6 +14,8 @@ import { MatButtonModule } from "@angular/material/button";
         ShellRoutingModule,
         MatToolbarModule,
         MatButtonModule,
+        MatMenuModule,
+        MatIconModule,
     ],
 })
 export class ShellModule {}

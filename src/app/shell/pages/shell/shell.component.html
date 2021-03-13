@@ -1,5 +1,43 @@
-<mat-toolbar color="primary">
-    <span>Events7</span>
-    <button (click)="signOut()" mat-flat-button color="warn">Sign out</button>
+<mat-toolbar>
+    <button color="primary" mat-icon-button>
+        <mat-icon>menu</mat-icon>
+    </button>
+    <span class="ets-toolbar__header">Events7</span>
+    <span class="ets-toolbar__spacer"></span>
+    <span class="ets-profile__wrapper" *ngIf="user | async as userValue">
+        <button
+            mat-icon-button
+            [matMenuTriggerFor]="profileMenu"
+            class="ets-profile__button"
+        >
+            <img
+                class="ets-profile__image"
+                *ngIf="user | async as user"
+                [src]="user.photoURL"
+                [alt]="'Menu'"
+            />
+        </button>
+
+        <mat-menu #profileMenu="matMenu">
+            <div class="ets-profile-menu">
+                <img
+                    class="ets-profile__image--large"
+                    *ngIf="user | async as user"
+                    [src]="user.photoURL"
+                    [alt]="'Profile'"
+                />
+                <p class="ets-profile-menu__display_name">
+                    {{ userValue.displayName }}
+                </p>
+                <p>{{ userValue.email }}</p>
+                <br />
+                <div class="ets-profile-menu__container">
+                    <button (click)="signOut()" mat-flat-button color="warn">
+                        Sign out
+                    </button>
+                </div>
+            </div>
+        </mat-menu>
+    </span>
 </mat-toolbar>
-<router-outlet></router-outlet>
+<router-outlet id="esm-shell-router"></router-outlet>

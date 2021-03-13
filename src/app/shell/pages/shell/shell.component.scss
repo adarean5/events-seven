@@ -1,0 +1,56 @@
+@use "src/styles/variables";
+@use "src/styles/light-theme";
+
+.ets-toolbar__header {
+    color: light-theme.$ets-color-primary;
+}
+
+.ets-toolbar__spacer {
+    flex: 1 1 auto;
+}
+
+.ets-profile__wrapper {
+    display: inline-flex;
+    align-items: center;
+    margin: 0 variables.get-spacing(smallest);
+}
+
+.ets-profile__image {
+    width: variables.get-spacing(large);
+    border-radius: 50%;
+    border: variables.get-spacing(smallest) solid light-theme.$ets-color-accent;
+    padding: variables.get-spacing(smallest);
+
+    &--large {
+        @extend .ets-profile__image;
+        width: variables.get-spacing(xl);
+        border: variables.get-spacing(smaller) solid
+            light-theme.$ets-color-accent;
+        margin-bottom: variables.get-spacing(medium);
+    }
+}
+
+.ets-profile__button {
+    margin: 0 variables.get-spacing(smaller);
+}
+
+.ets-profile-menu {
+    width: 250px;
+    min-width: 250px;
+    flex-direction: column;
+    display: flex;
+    align-items: center;
+    padding-top: variables.get-spacing(medium);
+}
+
+.ets-profile-menu__container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: variables.get-spacing(medium);
+    border-top: 1px solid lightgray;
+}
+
+.ets-profile-menu__display_name {
+    font-size: large;
+}
