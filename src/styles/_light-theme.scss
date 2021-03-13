@@ -1,0 +1,28 @@
+@use "~@angular/material/theming" as ng-material;
+@include ng-material.mat-core();
+
+// Available color palettes: https://material.io/design/color/
+$_ets-palette-primary: ng-material.mat-palette(ng-material.$mat-pink);
+$_ets-palette-accent: ng-material.mat-palette(
+    ng-material.$mat-amber,
+    A200,
+    A100,
+    A400
+);
+$_ets-palette-warn: ng-material.mat-palette(ng-material.$mat-red);
+
+$_ets-theme: ng-material.mat-light-theme(
+    (
+        color: (
+            primary: $_ets-palette-primary,
+            accent: $_ets-palette-accent,
+            warn: $_ets-palette-warn,
+        ),
+    )
+);
+
+@include ng-material.angular-material-theme($_ets-theme);
+
+$ets-color-primary: ng-material.mat-color($_ets-palette-primary);
+$ets-color-accent: ng-material.mat-color($_ets-palette-accent);
+$ets-color-warn: ng-material.mat-color($_ets-palette-warn);

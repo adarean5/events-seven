@@ -1,0 +1,14 @@
+@use "sass:map" as map;
+
+$_ets-spacings: (
+    smallest: 2px,
+    smaller: 4px,
+    small: 8px,
+    medium: 16px,
+    large: 32px,
+    xl: 64px,
+);
+
+@function get-spacing($size) {
+    @return map.get($_ets-spacings, $size);
+}
