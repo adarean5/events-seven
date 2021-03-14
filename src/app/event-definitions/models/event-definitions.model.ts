@@ -13,6 +13,4 @@ export interface EventDefinition {
     priority: number;
     relatedEvents: Array<string>;
     createdById: string;
-    dateCreated: string;
-    dateUpdated: string;
 }

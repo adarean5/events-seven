@@ -52,6 +52,11 @@ export class EventOverviewComponent implements OnInit, OnDestroy {
             selectSelectedEventDefinition,
         );
         this.subscription.add(
+            this.eventDefinitions.subscribe((eventDefinitions) => {
+                console.log("Event definitions from store", eventDefinitions);
+            }),
+        );
+        this.subscription.add(
             this.selectedEventDefinition.subscribe((eventDefinition) => {
                 if (eventDefinition) {
                     this.setFormValues(eventDefinition);

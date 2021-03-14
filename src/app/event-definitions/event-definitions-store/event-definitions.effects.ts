@@ -6,6 +6,7 @@ import { of } from "rxjs";
 import { Action, createAction } from "@ngrx/store";
 import { buildType } from "./event-definitions.actions";
 import { Injectable } from "@angular/core";
+import { EventDefinition } from "@/app/event-definitions/models/event-definitions.model";
 
 @Injectable()
 export class EventDefinitionsEffects implements OnInitEffects {
@@ -16,13 +17,36 @@ export class EventDefinitionsEffects implements OnInitEffects {
 
     eventDefinitionsEffectsInit = createAction(buildType("Init"));
 
+    // getEventDefinitions = createEffect(() =>
+    //     this.actions$.pipe(
+    //         ofType(EventDefinitionActions.getEventDefinitions),
+    //         switchMap(() => this.eventDefinitionsService.getEventDefinitions()),
+    //         map((eventDefinitionsResponse) => {
+    //             return EventDefinitionActions.getEventDefinitionsSuccess({
+    //                 eventDefinitions: eventDefinitionsResponse,
+    //             });
+    //         }),
+    //         catchError((error: Error) =>
+    //             of(EventDefinitionActions.getEventDefinitionsError({ error })),
+    //         ),
+    //     ),
+    // );
+
     getEventDefinitions = createEffect(() =>
         this.actions$.pipe(
             ofType(EventDefinitionActions.getEventDefinitions),
             switchMap(() => this.eventDefinitionsService.getEventDefinitions()),
-            map((eventDefinitionsResponse) => {
+            map((eventDefinitionsCollection) => {
+                const eventDefinitions: EventDefinition[] = eventDefinitionsCollection.map(
+                    (eventDefinition) => ({
+                        ...eventDefinition,
+                        type: "app",
+                        relatedEvents: [],
+                    }),
+                );
+
                 return EventDefinitionActions.getEventDefinitionsSuccess({
-                    eventDefinitions: eventDefinitionsResponse,
+                    eventDefinitions,
                 });
             }),
             catchError((error: Error) =>

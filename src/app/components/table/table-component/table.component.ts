@@ -17,7 +17,9 @@ import { MatSort } from "@angular/material/sort";
     styleUrls: ["./table.component.scss"],
 })
 export class TableComponent<I, O> implements OnInit, AfterViewInit {
-    @Input() rowData!: Array<I>;
+    @Input() set rowData(newRowData: I[]) {
+        this.eventsDataSource.data = newRowData;
+    }
     @Input() columnDefs!: Array<any>;
     @Input() pageSizeOptions: Array<number> = [10, 15, 25, 50, 100];
     @Input() getRowId!: (rowModel: I) => O;
@@ -32,7 +34,6 @@ export class TableComponent<I, O> implements OnInit, AfterViewInit {
     constructor() {}
 
     ngOnInit(): void {
-        this.eventsDataSource.data = this.rowData;
         this.columnsToDisplay = this.columnDefs.map((column) => column.def);
     }
 
