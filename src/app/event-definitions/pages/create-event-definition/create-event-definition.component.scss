@@ -1,0 +1,13 @@
+@use "src/styles/variables";
+
+.esm-card {
+    margin: variables.get-spacing(smaller);
+}
+
+.ets-create-event__wrapper {
+    padding: variables.get-spacing(medium);
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}

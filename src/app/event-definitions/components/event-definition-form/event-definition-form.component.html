@@ -1,0 +1,51 @@
+<form
+    [formGroup]="form"
+    (ngSubmit)="onSubmit()"
+    class="ets-event-definitions__form"
+>
+    <mat-form-field appearance="outline">
+        <mat-label>Event name</mat-label>
+        <input formControlName="name" matInput type="text" />
+        <mat-error>This input is required</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label>Event description</mat-label>
+        <textarea rows="4" formControlName="description" matInput></textarea>
+        <mat-error>This input is required</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label>Event type</mat-label>
+        <mat-select formControlName="type">
+            <mat-option *ngFor="let eventType of eventTypes" [value]="eventType"
+                >{{ eventType }}
+            </mat-option>
+        </mat-select>
+        <mat-error>This input is required</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label>Priority</mat-label>
+        <input
+            min="0"
+            max="10"
+            formControlName="priority"
+            matInput
+            type="number"
+        />
+        <mat-error>Value must be between 0 and 10</mat-error>
+        <mat-hint>Enter a value between 0 and 10</mat-hint>
+    </mat-form-field>
+
+    <br />
+
+    <button
+        [disabled]="!form.valid"
+        type="submit"
+        mat-flat-button
+        color="primary"
+    >
+        Submit
+    </button>
+</form>

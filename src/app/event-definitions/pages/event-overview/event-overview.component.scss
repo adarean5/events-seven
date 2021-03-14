@@ -12,6 +12,12 @@
     align-items: stretch;
 }
 
+.ets-event-details__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 #event-definitions-list {
     flex: 2;
 }

@@ -9,18 +9,31 @@
             <app-table
                 *ngIf="eventDefinitions | async as eventsValue"
                 [rowData]="eventsValue"
-                [columnDefs]="columnDefs"
+                [columnDefs]="overviewColumnDefs"
                 [getRowId]="getEventIdFromGrid()"
+                [isPaginationEnabled]="true"
                 (rowClick)="setSelectedEventId($event)"
             ></app-table>
         </mat-card-content>
     </mat-card>
 
     <mat-card id="ets-event-details__wrapper" class="esm-card">
-        <mat-card-header>
+        <mat-card-header class="ets-event-details__header">
             <mat-card-title>
                 <span>Event details</span>
             </mat-card-title>
+            <button
+                *ngIf="
+                    selectedEventDefinitionValue && user | async as userValue
+                "
+                [disabled]="
+                    userValue.uid === selectedEventDefinitionValue?.createdById
+                "
+                (click)="isEditMode = !isEditMode"
+                mat-icon-button
+            >
+                <mat-icon>{{ isEditMode ? "cancel" : "edit" }}</mat-icon>
+            </button>
         </mat-card-header>
 
         <br />
@@ -34,8 +47,18 @@
                 "
             >
                 <app-event-definition-form
+                    *ngIf="isEditMode; else readOnlyMode"
                     [eventDefinition]="selectedEventDefinitionValue"
                 ></app-event-definition-form>
+
+                <ng-template #readOnlyMode>
+                    <app-table
+                        [columnDefs]="detailsColumnView"
+                        [rowData]="
+                            createReadOnlyRowData(selectedEventDefinitionValue)
+                        "
+                    ></app-table>
+                </ng-template>
             </ng-container>
         </mat-card-content>
     </mat-card>

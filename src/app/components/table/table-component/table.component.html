@@ -26,5 +26,8 @@
         ></mat-row>
     </table>
 
-    <mat-paginator [pageSizeOptions]="pageSizeOptions"></mat-paginator>
+    <mat-paginator
+        *ngIf="isPaginationEnabled"
+        [pageSizeOptions]="pageSizeOptions"
+    ></mat-paginator>
 </div>

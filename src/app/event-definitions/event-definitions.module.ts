@@ -13,6 +13,7 @@ import { EventDefinitionsServicesModule } from "@/app/event-definitions/services
 import { EventDefinitionsShellComponent } from "./pages/event-definitions-shell/event-definitions-shell.component";
 import { CreateEventDefinitionComponent } from "./pages/create-event-definition/create-event-definition.component";
 import { EventDefinitionFormComponent } from "./components/event-definition-form/event-definition-form.component";
+import { MatIconModule } from "@angular/material/icon";
 
 @NgModule({
     declarations: [
@@ -33,6 +34,7 @@ import { EventDefinitionFormComponent } from "./components/event-definition-form
         ReactiveFormsModule,
         MatButtonModule,
         EventDefinitionsStoreModule,
+        MatIconModule,
     ],
 })
 export class EventDefinitionsModule {}

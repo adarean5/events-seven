@@ -13,6 +13,9 @@ import {
     selectSelectedEventDefinitionId,
 } from "@/app/event-definitions/event-definitions-store/event-definitions.selectors";
 import { setSelectedEventDefinitionId } from "@/app/event-definitions/event-definitions-store/event-definitions.actions";
+import { User } from "@/app/models/user.model";
+import { UserState } from "@/app/app-store/user-store/user.state";
+import { selectUser } from "@/app/app-store/user-store/user.selectors";
 
 @Component({
     selector: "app-event-overview",
@@ -21,11 +24,22 @@ import { setSelectedEventDefinitionId } from "@/app/event-definitions/event-defi
 })
 export class EventOverviewComponent implements OnInit, OnDestroy {
     subscription = new Subscription();
+    isEditMode = false;
+    eventTest = [
+        {
+            key: "Yolo",
+            value: "YES",
+        },
+    ];
     eventDefinitions!: Observable<Array<EventDefinition>>;
-    columnDefs = [
+    overviewColumnDefs = [
         { def: "name", headerText: "Name", sortable: true },
         { def: "type", headerText: "Type" },
         { def: "priority", headerText: "Priority", sortable: true },
+    ];
+    detailsColumnView = [
+        { def: "key", headerText: "Property" },
+        { def: "value", headerText: "Value" },
     ];
     eventForm = new FormGroup({
         name: new FormControl("", [Validators.required]),
@@ -40,26 +54,30 @@ export class EventOverviewComponent implements OnInit, OnDestroy {
     readonly eventTypes = Object.values(EventTypes);
     selectedEventId!: Observable<string | null>;
     selectedEventDefinition!: Observable<EventDefinition | null>;
+    selectedEventDefinitionValue: EventDefinition | null = null;
+    user!: Observable<User>;
 
-    constructor(private store: Store<EventDefinitionsState>) {}
+    constructor(
+        private eventDefinitionStore: Store<EventDefinitionsState>,
+        private userStore: Store<UserState>,
+    ) {}
 
     ngOnInit(): void {
-        this.eventDefinitions = this.store.select(selectEventDefinitions);
-        this.selectedEventId = this.store.select(
+        this.user = this.userStore.select(selectUser) as Observable<User>;
+        this.eventDefinitions = this.eventDefinitionStore.select(
+            selectEventDefinitions,
+        );
+        this.selectedEventId = this.eventDefinitionStore.select(
             selectSelectedEventDefinitionId,
         );
-        this.selectedEventDefinition = this.store.select(
+        this.selectedEventDefinition = this.eventDefinitionStore.select(
             selectSelectedEventDefinition,
-        );
-        this.subscription.add(
-            this.eventDefinitions.subscribe((eventDefinitions) => {
-                console.log("Event definitions from store", eventDefinitions);
-            }),
         );
         this.subscription.add(
             this.selectedEventDefinition.subscribe((eventDefinition) => {
                 if (eventDefinition) {
                     this.setFormValues(eventDefinition);
+                    this.selectedEventDefinitionValue = eventDefinition;
                 }
             }),
         );
@@ -75,7 +93,10 @@ export class EventOverviewComponent implements OnInit, OnDestroy {
     }
 
     setSelectedEventId(eventId: string): void {
-        this.store.dispatch(setSelectedEventDefinitionId({ id: eventId }));
+        this.isEditMode = false;
+        this.eventDefinitionStore.dispatch(
+            setSelectedEventDefinitionId({ id: eventId }),
+        );
     }
 
     getEventIdFromGrid(): (event: EventDefinition) => string {
@@ -84,6 +105,17 @@ export class EventOverviewComponent implements OnInit, OnDestroy {
 
     onSubmitEventForm(): void {
         console.log("Form submitted", this.eventForm.value);
+    }
+
+    createReadOnlyRowData(eventDefinition: EventDefinition): Array<any> {
+        return Object.keys(eventDefinition)
+            .sort()
+            .map((key: string) => {
+                return {
+                    key,
+                    value: eventDefinition[key as keyof EventDefinition],
+                };
+            });
     }
 
     ngOnDestroy(): void {

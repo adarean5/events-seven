@@ -1,0 +1,17 @@
+<div class="ets-create-event__wrapper">
+    <mat-card id="ets-create-event-form" class="esm-card">
+        <mat-card-header>
+            <mat-card-title>
+                <span>Create a new event definition</span>
+            </mat-card-title>
+        </mat-card-header>
+
+        <br />
+
+        <mat-card-content>
+            <app-event-definition-form
+                (submitDefinitions)="submitForm($event)"
+            ></app-event-definition-form>
+        </mat-card-content>
+    </mat-card>
+</div>

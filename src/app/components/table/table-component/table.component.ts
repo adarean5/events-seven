@@ -21,6 +21,7 @@ export class TableComponent<I, O> implements OnInit, AfterViewInit {
         this.eventsDataSource.data = newRowData;
     }
     @Input() columnDefs!: Array<any>;
+    @Input() isPaginationEnabled?: boolean;
     @Input() pageSizeOptions: Array<number> = [10, 15, 25, 50, 100];
     @Input() getRowId!: (rowModel: I) => O;
     @Output() rowClick = new EventEmitter<O>();
@@ -38,7 +39,9 @@ export class TableComponent<I, O> implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit(): void {
-        this.eventsDataSource.paginator = this.paginator;
+        if (this.isPaginationEnabled) {
+            this.eventsDataSource.paginator = this.paginator;
+        }
         this.eventsDataSource.sort = this.sort;
     }
 
