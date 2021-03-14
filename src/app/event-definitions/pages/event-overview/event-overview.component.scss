@@ -8,6 +8,7 @@
     padding: variables.get-spacing(medium);
     width: 100%;
     display: flex;
+    flex-wrap: wrap;
     align-items: stretch;
 }
 
@@ -15,6 +16,11 @@
     flex: 2;
 }
 
-#event-definitions-form {
+#ets-event-details__wrapper {
     flex: 1;
+}
+
+#ets-event-details__form {
+    display: flex;
+    flex-direction: column;
 }

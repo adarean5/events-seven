@@ -5,7 +5,7 @@ export enum EventTypes {
     LiveOps = "liveops",
 }
 
-export interface Event {
+export interface EventDefinition {
     id: string;
     name: string;
     description: string;
@@ -13,4 +13,6 @@ export interface Event {
     priority: number;
     relatedEvents: Array<string>;
     createdById: string;
+    dateCreated: string;
+    dateUpdated: string;
 }

@@ -1,6 +1,13 @@
 import { Component, OnInit } from "@angular/core";
-import { Event, EventTypes } from "@/app/event-definitions/models/event.model";
-import { Observable, of } from "rxjs";
+import {
+    EventDefinition,
+    EventTypes,
+} from "@/app/event-definitions/models/event-definitions.model";
+import { Observable, Subject } from "rxjs";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { Store } from "@ngrx/store";
+import { EventDefinitionsState } from "@/app/event-definitions/event-definitions-store/event-definitions.state";
+import { selectEventDefinitions } from "@/app/event-definitions/event-definitions-store/event-definitions.selectors";
 
 @Component({
     selector: "app-event-overview",
@@ -8,91 +15,53 @@ import { Observable, of } from "rxjs";
     styleUrls: ["./event-overview.component.scss"],
 })
 export class EventOverviewComponent implements OnInit {
-    events!: Observable<Array<Event>>;
+    events!: Observable<Array<EventDefinition>>;
     columnDefs = [
         { def: "name", headerText: "Name", sortable: true },
         { def: "type", headerText: "Type" },
         { def: "priority", headerText: "Priority", sortable: true },
     ];
+    eventForm = new FormGroup({
+        name: new FormControl("", [Validators.required]),
+        description: new FormControl("", [Validators.required]),
+        type: new FormControl("", [Validators.required]),
+        priority: new FormControl(0, [
+            Validators.required,
+            Validators.min(0),
+            Validators.max(10),
+        ]),
+    });
+    readonly eventTypes = Object.values(EventTypes);
+    selectedEventId: Subject<string | null> = new Subject();
+    selectedEvent: EventDefinition | null = null;
 
-    constructor() {}
+    constructor(private store: Store<EventDefinitionsState>) {}
 
     ngOnInit(): void {
-        this.events = this.getEventsMock();
+        this.events = this.store.select(selectEventDefinitions);
     }
 
-    getEventsMock(): Observable<Array<Event>> {
-        return of([
-            {
-                id: "test-id-0",
-                name: "click-event",
-                description:
-                    "when the user clicks the button the event should be triggered",
-                type: EventTypes.App,
-                priority: 2,
-                relatedEvents: [],
-                createdById: "1",
-            },
-            {
-                id: "test-id-1",
-                name: "show-button-event",
-                description:
-                    "when the user clicks the button it should be shown",
-                type: EventTypes.CrossPromo,
-                priority: 10,
-                relatedEvents: [],
-                createdById: "2",
-            },
-            {
-                id: "test-id-2",
-                name: "redirect-event",
-                description:
-                    "the user will be redirected when accessing an invalid url",
-                type: EventTypes.CrossPromo,
-                priority: 4,
-                relatedEvents: [],
-                createdById: "1",
-            },
-            {
-                id: "test-id-2",
-                name: "redirect-event",
-                description:
-                    "the user will be redirected when accessing an invalid url",
-                type: EventTypes.CrossPromo,
-                priority: 4,
-                relatedEvents: [],
-                createdById: "1",
-            },
-            {
-                id: "test-id-3",
-                name: "redirect-event",
-                description:
-                    "the user will be redirected when accessing an invalid url",
-                type: EventTypes.CrossPromo,
-                priority: 1,
-                relatedEvents: [],
-                createdById: "1",
-            },
-            {
-                id: "test-id-4",
-                name: "redirect-event",
-                description:
-                    "the user will be redirected when accessing an invalid url",
-                type: EventTypes.Ads,
-                priority: 4,
-                relatedEvents: [],
-                createdById: "3",
-            },
-            {
-                id: "test-id-5",
-                name: "redirect-event",
-                description:
-                    "the user will be redirected when accessing an invalid url",
-                type: EventTypes.LiveOps,
-                priority: 6,
-                relatedEvents: [],
-                createdById: "2",
-            },
-        ]);
+    onSubmitEventForm(): void {
+        console.log("Form submitted", this.eventForm.value);
+    }
+
+    getEventId(): (event: EventDefinition) => string {
+        return (event: EventDefinition) => event.id;
+    }
+
+    setSelectedEventId(eventId: string): void {
+        console.log("Event id", eventId);
+        this.selectedEventId.next(eventId);
+    }
+
+    getSelectedEvent(eventId: string): void /*Observable<Event>*/ {
+        console.log(eventId);
+        // this.events.pipe(
+        //     take(1),
+        //     map(
+        //         (events) =>
+        //             events.find((event) => event.id === eventId) as Event,
+        //     ),
+        // ).subscribe((event) =>);
     }
 }

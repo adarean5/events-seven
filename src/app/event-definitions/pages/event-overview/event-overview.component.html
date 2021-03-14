@@ -10,17 +10,67 @@
                 *ngIf="events | async as eventsValue"
                 [rowData]="eventsValue"
                 [columnDefs]="columnDefs"
+                [getRowId]="getEventId()"
+                (rowClick)="setSelectedEventId($event)"
             ></app-table>
         </mat-card-content>
     </mat-card>
-    <mat-card id="event-definitions-form" class="esm-card">
+
+    <mat-card id="ets-event-details__wrapper" class="esm-card">
         <mat-card-header>
             <mat-card-title>
-                <span>Edit event</span>
+                <span>Event details</span>
             </mat-card-title>
         </mat-card-header>
+
         <mat-card-content>
-            <p>TODO: Add event form</p>
+            <form
+                *ngIf="selectedEventId; else emptyEventsForm"
+                [formGroup]="eventForm"
+                (ngSubmit)="onSubmitEventForm()"
+                id="ets-event-details__form"
+            >
+                <mat-form-field>
+                    <mat-label>Event name</mat-label>
+                    <input formControlName="name" matInput type="text" />
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Event description</mat-label>
+                    <input formControlName="description" matInput type="text" />
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Event type</mat-label>
+                    <mat-select formControlName="type">
+                        <mat-option
+                            *ngFor="let eventType of eventTypes"
+                            [value]="eventType"
+                            >{{ eventType }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Priority</mat-label>
+                    <input
+                        placeholder="Enter a value between 0 and 10"
+                        min="0"
+                        max="10"
+                        formControlName="name"
+                        matInput
+                        type="number"
+                    />
+                </mat-form-field>
+
+                <button type="submit" mat-flat-button color="primary">
+                    Save
+                </button>
+            </form>
         </mat-card-content>
     </mat-card>
+
+    <ng-template #emptyEventsForm>
+        <p>Select a row to edit an event</p>
+    </ng-template>
 </div>
