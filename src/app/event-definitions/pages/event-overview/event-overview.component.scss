@@ -20,7 +20,8 @@
     flex: 1;
 }
 
-#ets-event-details__form {
+.ets-evt-overview-empty {
     display: flex;
     flex-direction: column;
+    align-items: center;
 }

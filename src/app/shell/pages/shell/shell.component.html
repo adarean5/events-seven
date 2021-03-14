@@ -3,6 +3,17 @@
         <mat-icon>menu</mat-icon>
     </button>
     <span class="ets-toolbar__header">Events7</span>
+    <span class="ets-toolbar__links">
+        <a
+            routerLink="/event-definitions/overview"
+            routerLinkActive="active-link"
+        >
+            Definitions overview
+        </a>
+        <a routerLink="/event-definitions/create" routerLinkActive="active-link"
+            >Create definition</a
+        >
+    </span>
     <span class="ets-toolbar__spacer"></span>
     <span class="ets-profile__wrapper" *ngIf="user | async as userValue">
         <button

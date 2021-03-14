@@ -18,3 +18,8 @@ export const getEventDefinitionsError = createAction(
     buildType("Get event definitions error"),
     props<{ error: Error }>(),
 );
+
+export const setSelectedEventDefinitionId = createAction(
+    buildType("Set selectedEventDefinitionId"),
+    props<{ id: string }>(),
+);

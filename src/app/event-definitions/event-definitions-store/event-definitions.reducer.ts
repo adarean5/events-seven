@@ -25,4 +25,12 @@ export const eventDefinitionsReducer = createReducer(
         isLoading: false,
         error,
     })),
+
+    on(
+        EventDefinitionActions.setSelectedEventDefinitionId,
+        (state, { id }) => ({
+            ...state,
+            selectedEventDefinitionId: id,
+        }),
+    ),
 );

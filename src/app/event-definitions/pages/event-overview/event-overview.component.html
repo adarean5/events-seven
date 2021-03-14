@@ -7,10 +7,10 @@
         </mat-card-header>
         <mat-card-content>
             <app-table
-                *ngIf="events | async as eventsValue"
+                *ngIf="eventDefinitions | async as eventsValue"
                 [rowData]="eventsValue"
                 [columnDefs]="columnDefs"
-                [getRowId]="getEventId()"
+                [getRowId]="getEventIdFromGrid()"
                 (rowClick)="setSelectedEventId($event)"
             ></app-table>
         </mat-card-content>
@@ -23,54 +23,35 @@
             </mat-card-title>
         </mat-card-header>
 
+        <br />
+
         <mat-card-content>
-            <form
-                *ngIf="selectedEventId; else emptyEventsForm"
-                [formGroup]="eventForm"
-                (ngSubmit)="onSubmitEventForm()"
-                id="ets-event-details__form"
+            <ng-container
+                *ngIf="
+                    selectedEventDefinition
+                        | async as selectedEventDefinitionValue;
+                    else emptyEventsForm
+                "
             >
-                <mat-form-field>
-                    <mat-label>Event name</mat-label>
-                    <input formControlName="name" matInput type="text" />
-                </mat-form-field>
-
-                <mat-form-field>
-                    <mat-label>Event description</mat-label>
-                    <input formControlName="description" matInput type="text" />
-                </mat-form-field>
-
-                <mat-form-field>
-                    <mat-label>Event type</mat-label>
-                    <mat-select formControlName="type">
-                        <mat-option
-                            *ngFor="let eventType of eventTypes"
-                            [value]="eventType"
-                            >{{ eventType }}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-
-                <mat-form-field>
-                    <mat-label>Priority</mat-label>
-                    <input
-                        placeholder="Enter a value between 0 and 10"
-                        min="0"
-                        max="10"
-                        formControlName="name"
-                        matInput
-                        type="number"
-                    />
-                </mat-form-field>
-
-                <button type="submit" mat-flat-button color="primary">
-                    Save
-                </button>
-            </form>
+                <app-event-definition-form
+                    [eventDefinition]="selectedEventDefinitionValue"
+                ></app-event-definition-form>
+            </ng-container>
         </mat-card-content>
     </mat-card>
 
     <ng-template #emptyEventsForm>
-        <p>Select a row to edit an event</p>
+        <div class="ets-evt-overview-empty">
+            <p>Select a row to edit an existing event definition</p>
+            <p>or</p>
+            <button
+                routerLink="/event-definitions/create"
+                mat-button
+                mat-flat-button
+                color="primary"
+            >
+                Create a new event
+            </button>
+        </div>
     </ng-template>
 </div>

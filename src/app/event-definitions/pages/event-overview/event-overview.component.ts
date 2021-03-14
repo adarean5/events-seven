@@ -1,21 +1,27 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import {
     EventDefinition,
     EventTypes,
 } from "@/app/event-definitions/models/event-definitions.model";
-import { Observable, Subject } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { Store } from "@ngrx/store";
 import { EventDefinitionsState } from "@/app/event-definitions/event-definitions-store/event-definitions.state";
-import { selectEventDefinitions } from "@/app/event-definitions/event-definitions-store/event-definitions.selectors";
+import {
+    selectEventDefinitions,
+    selectSelectedEventDefinition,
+    selectSelectedEventDefinitionId,
+} from "@/app/event-definitions/event-definitions-store/event-definitions.selectors";
+import { setSelectedEventDefinitionId } from "@/app/event-definitions/event-definitions-store/event-definitions.actions";
 
 @Component({
     selector: "app-event-overview",
     templateUrl: "./event-overview.component.html",
     styleUrls: ["./event-overview.component.scss"],
 })
-export class EventOverviewComponent implements OnInit {
-    events!: Observable<Array<EventDefinition>>;
+export class EventOverviewComponent implements OnInit, OnDestroy {
+    subscription = new Subscription();
+    eventDefinitions!: Observable<Array<EventDefinition>>;
     columnDefs = [
         { def: "name", headerText: "Name", sortable: true },
         { def: "type", headerText: "Type" },
@@ -32,36 +38,50 @@ export class EventOverviewComponent implements OnInit {
         ]),
     });
     readonly eventTypes = Object.values(EventTypes);
-    selectedEventId: Subject<string | null> = new Subject();
-    selectedEvent: EventDefinition | null = null;
+    selectedEventId!: Observable<string | null>;
+    selectedEventDefinition!: Observable<EventDefinition | null>;
 
     constructor(private store: Store<EventDefinitionsState>) {}
 
     ngOnInit(): void {
-        this.events = this.store.select(selectEventDefinitions);
+        this.eventDefinitions = this.store.select(selectEventDefinitions);
+        this.selectedEventId = this.store.select(
+            selectSelectedEventDefinitionId,
+        );
+        this.selectedEventDefinition = this.store.select(
+            selectSelectedEventDefinition,
+        );
+        this.subscription.add(
+            this.selectedEventDefinition.subscribe((eventDefinition) => {
+                if (eventDefinition) {
+                    this.setFormValues(eventDefinition);
+                }
+            }),
+        );
+    }
+
+    setFormValues(eventDefinition: EventDefinition): void {
+        this.eventForm.patchValue({
+            name: eventDefinition.name,
+            description: eventDefinition.description,
+            type: eventDefinition.type,
+            priority: eventDefinition.priority,
+        });
+    }
+
+    setSelectedEventId(eventId: string): void {
+        this.store.dispatch(setSelectedEventDefinitionId({ id: eventId }));
+    }
+
+    getEventIdFromGrid(): (event: EventDefinition) => string {
+        return (event: EventDefinition) => event.id;
     }
 
     onSubmitEventForm(): void {
         console.log("Form submitted", this.eventForm.value);
     }
 
-    getEventId(): (event: EventDefinition) => string {
-        return (event: EventDefinition) => event.id;
-    }
-
-    setSelectedEventId(eventId: string): void {
-        console.log("Event id", eventId);
-        this.selectedEventId.next(eventId);
-    }
-
-    getSelectedEvent(eventId: string): void /*Observable<Event>*/ {
-        console.log(eventId);
-        // this.events.pipe(
-        //     take(1),
-        //     map(
-        //         (events) =>
-        //             events.find((event) => event.id === eventId) as Event,
-        //     ),
-        // ).subscribe((event) =>);
+    ngOnDestroy(): void {
+        this.subscription.unsubscribe();
     }
 }

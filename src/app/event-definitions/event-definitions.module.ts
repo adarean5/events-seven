@@ -10,9 +10,17 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { EventDefinitionsStoreModule } from "@/app/event-definitions/event-definitions-store/event-definitions-store.module";
 import { EventDefinitionsServicesModule } from "@/app/event-definitions/services/event-definitions-services.module";
+import { EventDefinitionsShellComponent } from "./pages/event-definitions-shell/event-definitions-shell.component";
+import { CreateEventDefinitionComponent } from "./pages/create-event-definition/create-event-definition.component";
+import { EventDefinitionFormComponent } from "./components/event-definition-form/event-definition-form.component";
 
 @NgModule({
-    declarations: [EventOverviewComponent],
+    declarations: [
+        EventOverviewComponent,
+        EventDefinitionsShellComponent,
+        CreateEventDefinitionComponent,
+        EventDefinitionFormComponent,
+    ],
     imports: [
         CommonModule,
         EventDefinitionsRoutingModule,

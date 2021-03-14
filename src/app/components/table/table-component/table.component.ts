@@ -42,9 +42,7 @@ export class TableComponent<I, O> implements OnInit, AfterViewInit {
     }
 
     onRowClick(row: I): void {
-        console.log("on row clicked triggered", row);
         const rowId = this.getRowId(row);
-        console.log("Row id", rowId);
         this.rowClick.emit(rowId);
     }
 }
