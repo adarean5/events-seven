@@ -1,5 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import { EventDefinition } from "@/app/event-definitions/models/event-definitions.model";
+import { Store } from "@ngrx/store";
+import { EventDefinitionsState } from "@/app/event-definitions/event-definitions-store/event-definitions.state";
+import { createEventDefinition } from "@/app/event-definitions/event-definitions-store/event-definitions.actions";
 
 @Component({
     selector: "app-create-event-definition",
@@ -7,11 +10,12 @@ import { EventDefinition } from "@/app/event-definitions/models/event-definition
     styleUrls: ["./create-event-definition.component.scss"],
 })
 export class CreateEventDefinitionComponent implements OnInit {
-    constructor() {}
+    constructor(private store: Store<EventDefinitionsState>) {}
 
     ngOnInit(): void {}
 
     submitForm(eventDefinition: EventDefinition): void {
-        console.log("Submit new event definition", eventDefinition);
+        console.log("Create new definition", eventDefinition);
+        this.store.dispatch(createEventDefinition({ eventDefinition }));
     }
 }
