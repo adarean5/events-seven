@@ -3,7 +3,9 @@ import {
     Component,
     Input,
     OnInit,
+    Output,
     ViewChild,
+    EventEmitter,
 } from "@angular/core";
 import { MatTableDataSource } from "@angular/material/table";
 import { MatPaginator } from "@angular/material/paginator";
@@ -14,15 +16,17 @@ import { MatSort } from "@angular/material/sort";
     templateUrl: "./table.component.html",
     styleUrls: ["./table.component.scss"],
 })
-export class TableComponent<T> implements OnInit, AfterViewInit {
-    @Input() rowData!: Array<T>;
+export class TableComponent<I, O> implements OnInit, AfterViewInit {
+    @Input() rowData!: Array<I>;
     @Input() columnDefs!: Array<any>;
     @Input() pageSizeOptions: Array<number> = [10, 15, 25, 50, 100];
+    @Input() getRowId!: (rowModel: I) => O;
+    @Output() rowClick = new EventEmitter<O>();
 
     @ViewChild(MatPaginator) paginator!: MatPaginator;
     @ViewChild(MatSort) sort!: MatSort;
 
-    eventsDataSource = new MatTableDataSource<T>();
+    eventsDataSource = new MatTableDataSource<I>();
     columnsToDisplay: Array<string> = [];
 
     constructor() {}
@@ -35,5 +39,12 @@ export class TableComponent<T> implements OnInit, AfterViewInit {
     ngAfterViewInit(): void {
         this.eventsDataSource.paginator = this.paginator;
         this.eventsDataSource.sort = this.sort;
+    }
+
+    onRowClick(row: I): void {
+        console.log("on row clicked triggered", row);
+        const rowId = this.getRowId(row);
+        console.log("Row id", rowId);
+        this.rowClick.emit(rowId);
     }
 }
