@@ -17,30 +17,14 @@ export class EventDefinitionsEffects implements OnInitEffects {
 
     eventDefinitionsEffectsInit = createAction(buildType("Init"));
 
-    // getEventDefinitions = createEffect(() =>
-    //     this.actions$.pipe(
-    //         ofType(EventDefinitionActions.getEventDefinitions),
-    //         switchMap(() => this.eventDefinitionsService.getEventDefinitions()),
-    //         map((eventDefinitionsResponse) => {
-    //             return EventDefinitionActions.getEventDefinitionsSuccess({
-    //                 eventDefinitions: eventDefinitionsResponse,
-    //             });
-    //         }),
-    //         catchError((error: Error) =>
-    //             of(EventDefinitionActions.getEventDefinitionsError({ error })),
-    //         ),
-    //     ),
-    // );
-
     getEventDefinitions = createEffect(() =>
         this.actions$.pipe(
             ofType(EventDefinitionActions.getEventDefinitions),
-            switchMap(() => this.eventDefinitionsService.getEventDefinitions()),
+            switchMap(() => this.eventDefinitionsService.getAll()),
             map((eventDefinitionsCollection) => {
                 const eventDefinitions: EventDefinition[] = eventDefinitionsCollection.map(
                     (eventDefinition) => ({
                         ...eventDefinition,
-                        type: "app",
                         relatedEvents: [],
                     }),
                 );
@@ -53,6 +37,23 @@ export class EventDefinitionsEffects implements OnInitEffects {
                 of(EventDefinitionActions.getEventDefinitionsError({ error })),
             ),
         ),
+    );
+
+    updateEventDefinition = createEffect(
+        () =>
+            this.actions$.pipe(
+                ofType(EventDefinitionActions.updateEventDefinition),
+                switchMap((action) =>
+                    this.eventDefinitionsService.updateItem(
+                        action.eventDefinition,
+                    ),
+                ),
+                catchError((error) => {
+                    console.error(error);
+                    return of();
+                }),
+            ),
+        { dispatch: false },
     );
 
     init = createEffect(() =>

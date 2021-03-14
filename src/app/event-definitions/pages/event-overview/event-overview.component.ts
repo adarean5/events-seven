@@ -1,18 +1,17 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
-import {
-    EventDefinition,
-    EventTypes,
-} from "@/app/event-definitions/models/event-definitions.model";
+import { EventDefinition } from "@/app/event-definitions/models/event-definitions.model";
 import { Observable, Subscription } from "rxjs";
-import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { Store } from "@ngrx/store";
 import { EventDefinitionsState } from "@/app/event-definitions/event-definitions-store/event-definitions.state";
 import {
     selectEventDefinitions,
     selectSelectedEventDefinition,
-    selectSelectedEventDefinitionId,
 } from "@/app/event-definitions/event-definitions-store/event-definitions.selectors";
-import { setSelectedEventDefinitionId } from "@/app/event-definitions/event-definitions-store/event-definitions.actions";
+import {
+    deleteEventDefinition,
+    setSelectedEventDefinitionId,
+    updateEventDefinition,
+} from "@/app/event-definitions/event-definitions-store/event-definitions.actions";
 import { User } from "@/app/models/user.model";
 import { UserState } from "@/app/app-store/user-store/user.state";
 import { selectUser } from "@/app/app-store/user-store/user.selectors";
@@ -25,12 +24,6 @@ import { selectUser } from "@/app/app-store/user-store/user.selectors";
 export class EventOverviewComponent implements OnInit, OnDestroy {
     subscription = new Subscription();
     isEditMode = false;
-    eventTest = [
-        {
-            key: "Yolo",
-            value: "YES",
-        },
-    ];
     eventDefinitions!: Observable<Array<EventDefinition>>;
     overviewColumnDefs = [
         { def: "name", headerText: "Name", sortable: true },
@@ -41,18 +34,6 @@ export class EventOverviewComponent implements OnInit, OnDestroy {
         { def: "key", headerText: "Property" },
         { def: "value", headerText: "Value" },
     ];
-    eventForm = new FormGroup({
-        name: new FormControl("", [Validators.required]),
-        description: new FormControl("", [Validators.required]),
-        type: new FormControl("", [Validators.required]),
-        priority: new FormControl(0, [
-            Validators.required,
-            Validators.min(0),
-            Validators.max(10),
-        ]),
-    });
-    readonly eventTypes = Object.values(EventTypes);
-    selectedEventId!: Observable<string | null>;
     selectedEventDefinition!: Observable<EventDefinition | null>;
     selectedEventDefinitionValue: EventDefinition | null = null;
     user!: Observable<User>;
@@ -67,29 +48,17 @@ export class EventOverviewComponent implements OnInit, OnDestroy {
         this.eventDefinitions = this.eventDefinitionStore.select(
             selectEventDefinitions,
         );
-        this.selectedEventId = this.eventDefinitionStore.select(
-            selectSelectedEventDefinitionId,
-        );
         this.selectedEventDefinition = this.eventDefinitionStore.select(
             selectSelectedEventDefinition,
         );
         this.subscription.add(
             this.selectedEventDefinition.subscribe((eventDefinition) => {
                 if (eventDefinition) {
-                    this.setFormValues(eventDefinition);
+                    // this.setFormValues(eventDefinition);
                     this.selectedEventDefinitionValue = eventDefinition;
                 }
             }),
         );
-    }
-
-    setFormValues(eventDefinition: EventDefinition): void {
-        this.eventForm.patchValue({
-            name: eventDefinition.name,
-            description: eventDefinition.description,
-            type: eventDefinition.type,
-            priority: eventDefinition.priority,
-        });
     }
 
     setSelectedEventId(eventId: string): void {
@@ -103,8 +72,27 @@ export class EventOverviewComponent implements OnInit, OnDestroy {
         return (event: EventDefinition) => event.id;
     }
 
-    onSubmitEventForm(): void {
-        console.log("Form submitted", this.eventForm.value);
+    onSubmitEventForm(eventDefinition: EventDefinition): void {
+        if (this.selectedEventDefinitionValue) {
+            const test = {
+                ...this.selectedEventDefinitionValue,
+                ...eventDefinition,
+            };
+            this.eventDefinitionStore.dispatch(
+                updateEventDefinition({ eventDefinition: test }),
+            );
+            this.isEditMode = false;
+        }
+    }
+
+    deleteEventDefinition(): void {
+        if (this.selectedEventDefinitionValue) {
+            this.eventDefinitionStore.dispatch(
+                deleteEventDefinition({
+                    id: this.selectedEventDefinitionValue.id,
+                }),
+            );
+        }
     }
 
     createReadOnlyRowData(eventDefinition: EventDefinition): Array<any> {
@@ -116,6 +104,14 @@ export class EventOverviewComponent implements OnInit, OnDestroy {
                     value: eventDefinition[key as keyof EventDefinition],
                 };
             });
+    }
+
+    canEdit(userId: string): boolean {
+        return userId === this.selectedEventDefinitionValue?.createdById;
+    }
+
+    canDelete(userId: string): boolean {
+        return userId === this.selectedEventDefinitionValue?.createdById;
     }
 
     ngOnDestroy(): void {

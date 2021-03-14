@@ -23,3 +23,18 @@ export const setSelectedEventDefinitionId = createAction(
     buildType("Set selectedEventDefinitionId"),
     props<{ id: string }>(),
 );
+
+export const createEventDefinition = createAction(
+    buildType("Create event definition"),
+    props<{ eventDefinition: EventDefinition }>(),
+);
+
+export const updateEventDefinition = createAction(
+    buildType("Update event definition"),
+    props<{ eventDefinition: EventDefinition }>(),
+);
+
+export const deleteEventDefinition = createAction(
+    buildType("Delete event definition"),
+    props<{ id: string }>(),
+);

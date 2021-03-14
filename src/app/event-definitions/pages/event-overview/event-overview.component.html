@@ -22,18 +22,31 @@
             <mat-card-title>
                 <span>Event details</span>
             </mat-card-title>
-            <button
+            <div
                 *ngIf="
                     selectedEventDefinitionValue && user | async as userValue
                 "
-                [disabled]="
-                    userValue.uid === selectedEventDefinitionValue?.createdById
-                "
-                (click)="isEditMode = !isEditMode"
-                mat-icon-button
             >
-                <mat-icon>{{ isEditMode ? "cancel" : "edit" }}</mat-icon>
-            </button>
+                <button
+                    [disabled]="!canEdit(userValue.uid)"
+                    (click)="isEditMode = !isEditMode"
+                    mat-icon-button
+                >
+                    <mat-icon
+                        [color]="canEdit(userValue.uid) ? 'accent' : null"
+                        >{{ isEditMode ? "cancel" : "edit" }}</mat-icon
+                    >
+                </button>
+                <button
+                    mat-icon-button
+                    [disabled]="!canDelete(userValue.uid)"
+                    (click)="deleteEventDefinition()"
+                >
+                    <mat-icon [color]="canDelete(userValue.uid) ? 'warn' : null"
+                        >delete</mat-icon
+                    >
+                </button>
+            </div>
         </mat-card-header>
 
         <br />
@@ -49,6 +62,7 @@
                 <app-event-definition-form
                     *ngIf="isEditMode; else readOnlyMode"
                     [eventDefinition]="selectedEventDefinitionValue"
+                    (submitDefinitions)="onSubmitEventForm($event)"
                 ></app-event-definition-form>
 
                 <ng-template #readOnlyMode>
