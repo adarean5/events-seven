@@ -1,0 +1,59 @@
+rules_version = '2';
+service cloud.firestore {
+	function isAuthenticated() {
+  	return request.auth != null;
+  }
+  
+  function clientIsOwner() {
+  	return request.auth.uid == request.resource.data.createdById;
+  }
+  
+  function hasField(fieldName) {
+  	return request.resource.data[fieldName] != null;
+  }
+  
+  function hasStringValue(fieldName) {
+  	return (
+    	hasField(fieldName) &&
+      request.resource.data[fieldName] is string &&
+      request.resource.data[fieldName] != ""
+    );
+  }
+  
+  function priorityIsValid(priority) {
+  	return (
+    	priority is number &&
+      priority >= 0 &&
+      priority <= 10
+    )
+  }
+  
+  function eventIsValid() {
+  	return (
+    	hasStringValue("name") &&
+      hasStringValue("description") &&
+      priorityIsValid(request.resource.data.priority) // &&
+      // exists(/databases/$(database)/documents/$(request.resource.data.type.path))
+    );
+  }
+  
+  match /databases/{database}/documents {
+    match /event-definitions/{eventDefId} {
+    	allow read: if isAuthenticated();
+      allow create: if (
+      	isAuthenticated() &&
+        eventIsValid()
+      );
+    	allow update: if (
+      	isAuthenticated() &&
+        clientIsOwner() &&
+        eventIsValid()
+      );
+      allow delete: if (
+      	isAuthenticated() //&&
+        // clientIsOwner()
+        // TODO Set up a proper client is owner rule that does not rely on frontned input
+      )
+    }
+  }
+}
