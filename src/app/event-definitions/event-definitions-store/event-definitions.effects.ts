@@ -6,6 +6,7 @@ import {
     exhaustMap,
     map,
     switchMap,
+    tap,
     withLatestFrom,
 } from "rxjs/operators";
 import { of } from "rxjs";
@@ -14,6 +15,7 @@ import { buildType } from "./event-definitions.actions";
 import { Injectable } from "@angular/core";
 import { EventDefinition } from "@/app/event-definitions/models/event-definitions.model";
 import { selectUser } from "@/app/app-store/user-store/user.selectors";
+import { Router } from "@angular/router";
 
 @Injectable()
 export class EventDefinitionsEffects implements OnInitEffects {
@@ -21,6 +23,7 @@ export class EventDefinitionsEffects implements OnInitEffects {
         private actions$: Actions,
         private eventDefinitionsService: EventDefinitionsService,
         private store: Store,
+        private router: Router,
     ) {}
 
     eventDefinitionsEffectsInit = createAction(buildType("Init"));
@@ -82,6 +85,9 @@ export class EventDefinitionsEffects implements OnInitEffects {
                     return this.eventDefinitionsService.createItem(
                         eventDefinition,
                     );
+                }),
+                tap(() => {
+                    this.router.navigate(["/event-definitions/overview"]);
                 }),
                 catchError((error) => {
                     console.error(error);
